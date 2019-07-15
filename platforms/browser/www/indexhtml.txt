@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Map4RDF Mobile</title>
+        <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.2/css/all.css'>
+        <link rel="stylesheet" href="css/fonts.css">
+        <link rel='stylesheet' href='https://unpkg.com/leaflet@1.4.0/dist/leaflet.css'> 
+        <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/leaflet-extra-markers@1.0.6/dist/css/leaflet.extra-markers.min.css'>
+        <link rel="stylesheet" href="https://i.icomoon.io/public/temp/0595d84f1e/UntitledProject/style.css">
+        <link rel="stylesheet" href="css/style.css">
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">        
+    </head>
+    <body>
+        <header>
+            <div class="filtros-bar">
+               <a href="#" class="btn-filtro"><span class="icon-menu"></span></a>Map4-RDF Mobile
+            </div>
+            <nav id="nav-menu"> 
+                <ul>
+                    <li><a href="#" class="facets"><span class="icon-stack"></span>FACETS</a>
+                        <ul class="subMenu" id="subMenuFacets">
+                            <li><a href="#" id="btn-altimetria">Altimetria</a>
+                                <ul class="subMenu2" id="subMenuAltimetria">
+                                    <li><input type="checkbox" id="EntidadVirtualAccidenteOrografico" name="EntidadVirtualAccidenteOrografico" onclick="ejecutarQuery('EntidadVirtualAccidenteOrografico')" value="">Accidente orográfico no definido<br></li>
+                                    <li><input type="checkbox" id="Cerro" name="Cerro" onclick="ejecutarQuery('Cerro')" value="">Cerro<br></li>
+                                    <li><input type="checkbox" id="Collado" name="Collado" onclick="ejecutarQuery('Collado')" value="">Collado<br></li>
+                                    <li><input type="checkbox" id="ComarcaRegion" name="ComarcaRegion" onclick="ejecutarQuery('ComarcaRegion')" value="">Comarca/Región<br></li>
+                                    <li><input type="checkbox" id="Cordillera" name="Cordillera" onclick="ejecutarQuery('Cordillera')" value="">Cordillera<br></li>
+                                    <li><input type="checkbox" id="CotaMunicipal" name="Cota" onclick="ejecutarQuery('CotaMunicipal')" value="">Cota Municipal<br></li>
+                                    <li><input type="checkbox" id="CurvaDeNivelAltimetrica" name="CurvaAltimetrica" onclick="ejecutarQuery('CurvaDeNivelAltimetrica')" value="">Curva de nivel altimétrica<br></li>
+                                    <li><input type="checkbox" id="CurvaDeNivelBatimetrica" name="CurvaBatimetrica" onclick="ejecutarQuery('CurvaDeNivelBatimetrica')" value="">Curva de nivel batimétrica<br></li>
+                                    <li><input type="checkbox" id="Montana" name="Montana" onclick="ejecutarQuery('Montana')" value="">Montaña<br></li>
+                                    <li><input type="checkbox" id="Paraje" name="Paraje" onclick="ejecutarQuery('Paraje')" value="">Paraje<br></li>
+                                    <li><input type="checkbox" id="Pico"  name="Pico" onclick="ejecutarQuery('Pico')" value="">Pico<br></li>
+                                    <li><input type="checkbox" id="PuertoMontana"  name="PuertoMontana" onclick="ejecutarQuery('PuertoMontana')" value="">Puerto de Montaña<br></li>
+                                    <li><input type="checkbox" id="Sierra"  name="Sierra" onclick="ejecutarQuery('Sierra')" value="">Sierra<br></li>
+                                </ul>
+                            </li>
+                            <li><a href="#" id="btn-energia">Energia y Conducciones</a>
+                                <ul class="subMenu2" id="subMenuEnregia">
+                                    <li><input type="checkbox" id="CentralCicloCombinado" name="CentralCiclo" onclick="ejecutarQuery('CentralCicloCombinado')" value="">Central Ciclo Combinado<br></li>
+                                    <li><input type="checkbox" id="CentralEolica" name="CentralEolica" onclick="ejecutarQuery('CentralEolica')" value="">Central Eólica<br></li>
+                                    <li><input type="checkbox" id="CentralHidraulica" name="CentralHidra" onclick="ejecutarQuery('CentralHidraulica')" value="">Central Hidráulica<br></li>
+                                    <li><input type="checkbox" id="CentralNuclear" name="CentralNuclear" onclick="ejecutarQuery('CentralNuclear')" value="">Central Nuclear<br></li>
+                                    <li><input type="checkbox" id="CentralSolar" name="CentralSolar" onclick="ejecutarQuery('CentralSolar')" value="">Central Solar<br></li>
+                                    <li><input type="checkbox" id="CentralTermica" name="CentralTermica" onclick="ejecutarQuery('CentralTermica')" value="">Central Térmica<br></li>
+                                    <li><input type="checkbox" id="CentralElectrica" name="CentralElectrica" onclick="ejecutarQuery('CentralElectrica')" value="">Central eléctrica<br></li>
+                                    <li><input type="checkbox" id="DepositoDeAgua" name="DepAgua" onclick="ejecutarQuery('DepositoDeAgua')" value="">Depósito de Agua<br></li>
+                                    <li><input type="checkbox" id="DepositoDeCombustible" name="DepCombust" onclick="ejecutarQuery('DepositoDeCombustible')" value="">Depósito de Combustible<br></li>
+                                    <li><input type="checkbox" id="EstacionDeTelecomunicaciones" name="EstacionTeleco" onclick="ejecutarQuery('EstacionDeTelecomunicaciones')" value="">Estación De Telecomunicaciones<br></li>
+                                    <li><input type="checkbox" id="EstacionDepuradora" name="EstacionDepu" onclick="ejecutarQuery('EstacionDepuradora')" value="">Estación Depuradora<br></li>
+                                    <li><input type="checkbox" id="EstacionTelefonica" name="EstacionTelefo" onclick="ejecutarQuery('EstacionTelefonica')" value="">Estación Telefónica<br></li>
+                                    <li><input type="checkbox" id="EstacionDeRadio" name="EstacionRadio" onclick="ejecutarQuery('EstacionDeRadio')" value="">Estación de radio<br></li>
+                                    <li><input type="checkbox" id="EstacionDeTelevision" name="EstacionTele" onclick="ejecutarQuery('EstacionDeTelevision')" value="">Estación de televisión<br></li>
+                                    <li><input type="checkbox" id="Gasoducto" name="Gaseoducto" onclick="ejecutarQuery('Gasoducto')" value="">Gaseoducto<br></li>
+                                    <li><input type="checkbox" id="LineaElectricaDeAltaTension" name="LineaAlta" onclick="ejecutarQuery('LineaElectricaDeAltaTension')" value="">Linea Eléctrica De Alta Tensión<br></li>
+                                    <li><input type="checkbox" id="LineaElectricaDeBajaTension" name="LineaBaja" onclick="ejecutarQuery('LineaElectricaDeBajaTension')" value="">Linea Eléctrica De Baja Tensión<br></li>
+                                    <li><input type="checkbox" id="Oleoducto" name="Oleoducto" onclick="ejecutarQuery('Oleoducto')" value="">Oleoducto<br></li>
+                                    <li><input type="checkbox" id="SubestacionElectrica" name="SubestacionElectrica" onclick="ejecutarQuery('SubestacionElectrica')" value="">Subestacion Eléctrica<br></li>
+                                </ul>
+                            </li>
+                            <li><a href="#" id="btn-hidrografia">Hidrografia</a>
+                                <ul class="subMenu2" id="subMenuHidrografia">
+                                    <li><input type="checkbox" id="AccidenteMarPunt" name="AccidenteMarPunt" value="" onclick="ejecutarQuery('AccidenteMaritimoPuntual')">Accidente marítimo puntual<br></li>
+                                    <li><input type="checkbox" id="Albufera" name="Albufera" value="" onclick="ejecutarQuery('Albufera')">Albufera<br></li>
+                                    <li><input type="checkbox" id="Bahia" name="Bahia" value="" onclick="ejecutarQuery('Bahia')">Bahía<br></li>
+                                    <li><input type="checkbox" id="Balsa" name="Balsa" value="" onclick="ejecutarQuery('Balsa')">Balsa<br></li>
+                                    <li><input type="checkbox" id="Cabo" name="Cabo" value="" onclick="ejecutarQuery('Cabo')">Cabo<br></li>
+                                    <li><input type="checkbox" id="Cala" name="Cala" value="" onclick="ejecutarQuery('Cala')">Cala<br></li>
+                                    <li><input type="checkbox" id="CanalMayor" name="CanalMayor" value="" onclick="ejecutarQuery('CanalMayor')">Canal Mayor<br></li>
+                                    <li><input type="checkbox" id="CanalMenor" name="CanalMenor" value="" onclick="ejecutarQuery('CanalMenor')">Canal Menor<br></li>
+                                    <li><input type="checkbox" id="CanalTras" name="CanalTras" value="" onclick="ejecutarQuery('CanalTrasvase')">Canal Trasvase<br></li>
+                                    <li><input type="checkbox" id="Caño" name="Caño" value="" onclick="ejecutarQuery('Canyo')">Caño<br></li>
+                                    <li><input type="checkbox" id="Costa" name="Costa" value="" onclick="ejecutarQuery('Costa')">Costa<br></li>
+                                    <li><input type="checkbox" id="Delta" name="Delta" value="" onclick="ejecutarQuery('Delta')">Delta<br></li>
+                                    <li><input type="checkbox" id="Embalse" name="Embalse" value="" onclick="ejecutarQuery('Embalse')">Embalse<br></li>
+                                    <li><input type="checkbox" id="Ensenada" name="Ensenada" value="" onclick="ejecutarQuery('Ensenada')">Ensenada<br></li>
+                                    <li><input type="checkbox" id="EntidadVirtual" name="EntidadVirtual" value="" onclick="ejecutarQuery('EntidadVirtual')">Entidad virtual accidente marítimo<br></li>
+                                    <li><input type="checkbox" id="Esclusa" name="Esclusa" value="" onclick="ejecutarQuery('Esclusa')">Esclusa<br></li>
+                                    <li><input type="checkbox" id="Estanque" name="Estanque" value="" onclick="ejecutarQuery('Estanque')">Estanque<br></li>
+                                    <li><input type="checkbox" id="Estrecho" name="Estrecho" value="" onclick="ejecutarQuery('Estrecho')">Estrecho<br></li>
+                                    <li><input type="checkbox" id="Golfo" name="Golfo" value="" onclick="ejecutarQuery('Golfo')">Golfo<br></li>
+                                    <li><input type="checkbox" id="Humedal" name="Humedal" value="" onclick="ejecutarQuery('Humedal')">Humedal<br></li>
+                                    <li><input type="checkbox" id="IslaFluvial" name="IslaFluvial" value="" onclick="ejecutarQuery('IslaFluvial')">Isla Fluvial<br></li>
+                                    <li><input type="checkbox" id="IslaMaritima" name="IslaMaritima" value="" onclick="ejecutarQuery('IslaMaritima')">Isla Marítima<br></li>
+                                    <li><input type="checkbox" id="Laguna" name="Laguna" value="" onclick="ejecutarQuery('Laguna')">Laguna<br></li>
+                                    <li><input type="checkbox" id="Mar" name="Mar" value="" onclick="ejecutarQuery('Mar')">Mar<br></li>
+                                    <li><input type="checkbox" id="Marisma" name="Marisma" value="" onclick="ejecutarQuery('Marisma')">Marisma<br></li>
+                                    <li><input type="checkbox" id="Oceano" name="Oceano" value="" onclick="ejecutarQuery('Oceano')">Océano<br></li>
+                                    <li><input type="checkbox" id="Peñon" name="Peñon" value="" onclick="ejecutarQuery('Penyon')">Peñon<br></li>
+                                    <li><input type="checkbox" id="Playa" name="Playa" value="" onclick="ejecutarQuery('Playa')">Playa<br></li>
+                                    <li><input type="checkbox" id="Punta" name="Punta" value="" onclick="ejecutarQuery('Punta')">Punta<br></li>
+                                    <li><input type="checkbox" id="Rada" name="Rada" value="" onclick="ejecutarQuery('Rada')">Rada<br></li>
+                                    <li><input type="checkbox" id="Rambla" name="Rambla" value="" onclick="ejecutarQuery('Rambla')">Rambla<br></li>
+                                    <li><input type="checkbox" id="Ria" name="Ria" value="" onclick="ejecutarQuery('Ria')">Ría<br></li>
+                                    <li><input type="checkbox" id="RioSuperficial" name="RioSuperficial" value="" onclick="ejecutarQuery('RioSuperficial')">Río Superficial<br></li>
+                                    <li><input type="checkbox" id="Riolineal" name="Riolineal" value="" onclick="ejecutarQuery('RioLineal')">Río lineal<br></li>
+                                    <li><input type="checkbox" id="Salina" name="Salina" value="" onclick="ejecutarQuery('Salina')">Salina<br></li>
+                                </ul>
+                            </li>
+                            <li><a href="#" id="btn-poblaciones">Poblaciones y Construcciones</a>
+                                <ul class="subMenu2" id="subMenuPoblaciones"></ul>
+                            </li>
+                            <li><a href="#" id="btn-transporte">Transporte</a>
+                                <ul class="subMenu2" id="subMenuTransporte"></ul>
+                            </li>
+                            <li><a href="#" id="btn-unidades">Unidades Administrativas</a>
+                                <ul class="subMenu2" id="subMenuUnidades"></ul>
+                            </li>
+                            <li><a href="#" id="btn-vertices">Vertices Geodesicos</a>
+                                <ul class="subMenu2" id="subMenuVertices"></ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><a href="#" class="geo"><span class="icon-earth"></span>GEOPROCESAMIENTO</a></li>
+                    <li><a href="#" class="filtros"><span class="icon-equalizer"></span>FILTROS</a></li>
+                    <li><a href="#" class="result"><span class="icon-clipboard"></span>RESULTADOS</a></li>
+                </ul>
+            </nav>
+        </header>
+        <section>
+            <div id="map"></div>
+        </section>
+
+        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+        <script src='https://unpkg.com/leaflet@1.4.0/dist/leaflet.js'></script>
+        <script src='https://cdn.jsdelivr.net/npm/leaflet-extra-markers@1.0.6/src/assets/js/leaflet.extra-markers.min.js'></script> 
+        <script defer src="https://use.fontawesome.com/releases/v5.7.2/js/all.js"></script>
+        <script src="js/index.js"></script>
+        <script src="js/menu.js"></script> 
+    </body>
+</html>

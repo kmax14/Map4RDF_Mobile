@@ -1,0 +1,157 @@
+var map = L.map('map').setView([40.436890, -3.647326], 5)
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	maxZoom: 19,
+	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map)
+
+var markersMap = new Map();
+var flagsMap = new Map();
+
+function componentToHex(c) {
+  var hex = c.toString(16);
+  return hex.length == 1 ? "0" + hex : hex;
+}
+
+function ejecutarQuery(id) {
+
+    checkbox = document.getElementById(id);
+  
+    let uri = 'PREFIX dc: <http://purl.org/dc/terms/> PREFIX geosparql: <http://www.opengis.net/ont/geosparql#> PREFIX btn100:<https://datos.ign.es/def/btn100#> select distinct ?recurso ?coordenadas ?nombre where { ?recurso a btn100:' + id + ' . ?recurso dc:title ?nombre . ?recurso geosparql:hasGeometry ?geoNucleo . ?geoNucleo geosparql:asWKT ?coordenadas. }'
+    
+    let geo_uri_encoded = "";
+    geo_uri_encoded = encodeURIComponent(uri).replace(/'/g,"%27").replace(/"/g,"%22");	
+ 
+    var geo_uri = "https://datos.ign.es/sparql?default-graph-uri=&query=" + geo_uri_encoded + "&format=json&timeout=0"
+    
+    $.ajax({
+      method: 'GET',
+      dataType: 'jsonp',
+      url: geo_uri,
+      success: function (respuesta) {
+
+            datos = respuesta.results.bindings;
+
+            var colorR = Math.floor((Math.random() * 256));
+            var colorG = Math.floor((Math.random() * 256));
+            var colorB = Math.floor((Math.random() * 256));
+            console.log("rgb(" + colorR + "," + colorG + "," + colorB + ")");
+
+            var colorHex = componentToHex(colorR) + componentToHex(colorG) + componentToHex(colorB);
+
+            console.log(colorHex);
+
+            var limites= map.getBounds();
+
+            var coordxLimitSup = limites._northEast.lat;
+            var coordyLimitSup = limites._northEast.lng;
+            var coordxLimitInf = limites._southWest.lat;
+            var coordyLimitInf = limites._southWest.lng;
+
+            var markerObject = new Array();
+            var poligonObject = new Array();
+            var groupMarkers = L.layerGroup([]);
+            var groupPolygons = L.layerGroup([]);
+        
+            var x = 0;
+            for(var i = 0; i < datos.length; i++) {
+
+              let treeMarker =  L.ExtraMarkers.icon({
+                markerColor: "#024959",
+                shape: 'circle',
+                prefix: 'fa'
+              })
+          
+              var tipoDatos = datos[i].coordenadas.value.split("(")[0];
+              var base = datos[i].coordenadas.value.split("(");
+              
+              var nombre = datos[i].nombre.value;
+              var recurso = datos[i].recurso.value;
+
+              if (tipoDatos == "POLYGON" && checkbox.checked) {
+
+                var longPoligon = base[2].split(",").length;
+                var puntoPol = base[2].split(",");
+                var coordPol = new Array();
+                for(var j = 0; j < longPoligon-1; j++) {
+                  var coordyPol = puntoPol[j].split(" ")[0];
+                  var coordxPol = puntoPol[j].split(" ")[1];
+                  if (j == 13) {
+                    coordxPol = coordxPol.split(")")[0];
+                  }
+                  var arrayPol = [coordxPol,coordyPol];
+                  coordPol.push(arrayPol);
+                }
+                poligonObject[i] = coordPol;
+                var popup = L.popup().setContent("<b>Nombre</b>: "+ nombre + "<br>" + recurso);
+                var polygon = L.polygon(coordPol, {color: 'red'}).bindPopup(popup);
+                groupPolygons.addLayer(polygon)
+                console.log(coordPol);
+              }
+              else if (tipoDatos == "LINESTRING" && checkbox.checked) {
+
+                var baseLine = base[1];
+                console.log(baseLine);
+
+              }
+              else if (tipoDatos == "POINT" && checkbox.checked) {
+
+                var basePoint = base[1].split(" ");
+                var long2 = basePoint[1].length;
+                var coordy = basePoint[0];
+                var coordx = basePoint[1].substring(0,long2-1);
+
+                var popup = L.popup().setContent("<b>Nombre</b>: "+ nombre + "<br>" + recurso);
+                var marker = L.marker([coordx, coordy]).bindPopup(popup);
+                if ((coordxLimitInf <= coordx) && (coordx <= coordxLimitSup) && (coordyLimitInf <= coordy) && (coordy <= coordyLimitSup)) {
+                  markerObject[i] = marker;
+                  x = x + 1;
+                  groupMarkers.addLayer(marker);
+                }
+              }
+            }
+
+            if (tipoDatos == "POINT") {
+              console.log(x);
+              if(x > 1000 && checkbox.checked) {
+                console.log("UNO");
+                flagsMap.set(id,1);
+                alert("El numero de resultados es demasiado alto. Acota la busqueda")
+              }
+              else if(x <= 1000 && checkbox.checked) {
+                console.log("DOS");
+                map.addLayer(groupMarkers);
+                markersMap.set(id, groupMarkers);
+              } 
+              else if(flagsMap.get(id) != 1) {
+                console.log("TRES");
+                console.log(x);
+                var grupoBorrar = markersMap.get(id);
+                map.removeLayer(grupoBorrar);
+              }
+            }
+
+            if (tipoDatos == "POLYGON") {
+              console.log(poligonObject.length);
+              if(poligonObject.length > 1000 && checkbox.checked) {
+                console.log("UNO");
+                flagsMap.set(id,1);
+                alert("El numero de resultados es demasiado alto. Acota la busqueda")
+              }
+              else if(poligonObject.length <= 1000 && checkbox.checked) {
+                console.log("DOS");
+                map.addLayer(groupPolygons);
+                markersMap.set(id, groupPolygons);
+              } 
+              else if(flagsMap.get(id) != 1) {
+                console.log("TRES");
+                console.log(poligonObject.length);
+                var grupoBorrar = markersMap.get(id);
+                map.removeLayer(grupoBorrar);
+              }
+            }
+            
+      },
+      error: function() { alert('Algo no va bien') },
+    }); 
+}
